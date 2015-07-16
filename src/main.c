@@ -1,4 +1,5 @@
 #include <pebble.h>
+#define JSONDATA 0
 static Window *s_main_window;
 static MenuLayer *s_menulayer_main;
 
@@ -27,6 +28,13 @@ static void update_time() {
   
   //display this time on the TextLayer
 }
+
+//MENU LAYER CALLBACKS
+uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *callback_context)
+{
+    return 7;
+}
+
 //MAIN WINDOW LOAD/UNLOAD ------------------------------
 static void main_window_load(Window *window) {
   s_main_window = window_create();
@@ -40,6 +48,7 @@ static void main_window_load(Window *window) {
   layer_add_child(window_get_root_layer(s_main_window), (Layer *)s_menulayer_main);
   //improve the layout to be more like a watchface
   //add it as a child layer to the Window's root layer
+  layer_add_child(window_get_root_layer(s_main_window), menu_layer_get_layer(s_menulayer_main));
 }
 static void main_window_unload(Window *window) {
   //destroy MenuLayer
@@ -54,8 +63,26 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 //APPMESSAGE API IMPLEMENTATION: CALLBACKS
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  // Read first item
+  Tuple *t = dict_read_first(iterator);
 
+  // For all items
+  while(t != NULL) {
+    // Which key was received?
+    switch(t->key) {
+    case JSONDATA:
+      populateMenu(t->value);
+      break;
+    default:
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
+      break;
+    }
+
+    // Look for next item
+    t = dict_read_next(iterator);
+  }
 }
+
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
 }
