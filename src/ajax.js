@@ -7,6 +7,15 @@ var xhrRequest = function (url, type, callback) {
   xhr.send();
 };
 
+function posInArray(arrayToCheck, object) {
+  for(var i=0; i<arrayToCheck.length(); i++) {
+    if(arrayToCheck[i] == object) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
@@ -48,22 +57,56 @@ function getCards() {
       var quantity = data.length();
       
       //declare card attribute arrays
-      var ids = [], names = [], boards = [], lists = [], dueDates = [];
+      var ids = new Array(quantity), 
+          names = new Array(quantity), 
+          idBoards = new Array(quantity), 
+          nameBoards = new Array(quantity), 
+          idLists = new Array(quantity), 
+          nameLists = new Array(quantity), 
+          dueDates = new Array(quantity);
+      //declare card cache arrays
+      var idBoardsCache = [], idListsCache = [], nameBoardsCache = [], nameListsCache = [];
       
+      //populate card attribute arrays
       for(var i=0; i<quantity; i++) {
         ids[i] = data[i].id;
         names[i] = data[i].name;
-        boards[i] = data[i].idBoard;
-        lists[i] = data[i].list;
+        idBoards[i] = data[i].idBoard;
+        idLists[i] = data[i].idList;
         dueDates[i] = data[i].due;
       }
+      
+      var getBoardNameCallback = function(responseText) {
+        nameBoards[i] = data._value;
+      };
+      var getListNameCallback = function(responseText) {
+        nameBoards[i] = data._value;
+      };
+      
+      //populate card board, list names
+      for(var i=0; i<quantity; i++) {
+        var posInCache = posInArray(idBoardsCache[i], idBoards[i]);
+        if(posInCache > -1) {
+          nameBoards[i] = nameBoardsCache[posInCache];
+        } else {
+          // Construct URL
+          var url = 'https://trello.com/1/boards/' + idBoards[i] + '/name/'
+              '?key=' + 'f9bee48c183a4acbeaa96f8b16ca9fe8' + 
+              '&token=' + '7cf5e086aac9a4d225645c84c6b497c910dbc748ce3d6a9ace45934af6a9471b';
+        
+          // Send request to Trello
+          xhrRequest(url, 'GET', getBoardNameCallback);
+      }
+        
       
       // Assemble dictionary using our keys
       var dictionary = {
         'CARD_IDS': ids,
         'CARD_NAMES': names,
-        'CARD_BOARDS': boards,
-        'CARD_LISTS': lists,
+        'CARD_ID_BOARDS': idBoards,
+        'CARD_NAME_BOARDS': nameBoards,
+        'CARD_ID_LISTS': idLists,
+        'CARD_NAME_LISTS': nameLists,
         'CARD_DUE_DATES': dueDates,
         'CARD_QUANTITY': quantity
       };
