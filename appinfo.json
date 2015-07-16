@@ -1,0 +1,20 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "chibinhdang@gmail.com",
+    "longName": "Due Next on Trello",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "2",
+    "shortName": "Due on Trello",
+    "uuid": "55e2ceb5-9868-4be3-bd0e-17a068c08215",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
