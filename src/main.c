@@ -45,18 +45,15 @@ static void update_time() {
 }
 
 //MENU LAYER CALLBACKS
-uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *callback_context)
-{
+uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
     return (quantity < 60) ? quantity : 60;
 }
-void draw_row_callback(GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context)
-{
-  menu_cell_basic_draw(ctx, cell_layer, cardNames[(int)cell_index], 
-                       cardNameBoards[(int)cell_index] + '/' + cardNameLists[(int)cell_index] + '/' + cardDueDates[(int)cell_index],
-                       NULL);
+void draw_row_callback(GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) { 
+  char subtitleStr[92] = 
+    strcat(strcat(strcat(cardNameBoards[(int)cell_index], '/'), cardNameLists[(int)cell_index]), cardDueDates[(int)cell_index]);
+  menu_cell_basic_draw(ctx, cell_layer, cardNames[(int)cell_index], subtitleStr, NULL);
 }
-void select_click_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context)
-{
+void select_click_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
  
 }
 //MAIN WINDOW LOAD/UNLOAD ------------------------------
@@ -170,13 +167,10 @@ static void init() {
   
   //register with TickTimerService to update periodically according to user setting
 }
-
 static void deinit() {  
   //destroy Window
   window_destroy(s_main_window);
 }
-
-
 int main(void) {
   init();
   app_event_loop();
