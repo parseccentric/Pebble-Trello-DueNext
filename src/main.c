@@ -17,7 +17,7 @@ char[60][30] cardNameBoards;
 char[60][30] cardIdLists;
 char[60][30] cardNameLists;
 char[60][30] cardDueDates;
-int cardQuantity;
+int quantity;
 
 
 //REFRESH FUNCTIONS -----------------------------------
@@ -49,7 +49,16 @@ uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *
 {
     return (quantity < 60) ? quantity : 60;
 }
-
+void draw_row_callback(GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context)
+{
+  menu_cell_basic_draw(ctx, cell_layer, cardNames[cell_index], 
+                       cardNameBoards[cell_index] + '/' + cardNameLists[cell_index] + '/' + cardDueDates[cell_index],
+                       NULL);
+}
+void select_click_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context)
+{
+ 
+}
 //MAIN WINDOW LOAD/UNLOAD ------------------------------
 static void main_window_load(Window *window) {
   s_main_window = window_create();
@@ -108,7 +117,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         cardDueDates = t->value;
         break;
       case CARD_QUANTITY:
-        cardQuantity = t->value;
+        quantity = t->value;
         break;
       default:
         APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
