@@ -10,13 +10,13 @@
 static Window *s_main_window;
 static MenuLayer *s_menulayer_main;
 
-char[][30] cardIds;
-char[][100] cardNames;
-char[][40] cardIdBoards;
-char[][30] cardNameBoards;
-char[][30] cardIdLists;
-char[][30] cardNameLists;
-char[][30] cardDueDates;
+char[60][30] cardIds;
+char[60][100] cardNames;
+char[60][40] cardIdBoards;
+char[60][30] cardNameBoards;
+char[60][30] cardIdLists;
+char[60][30] cardNameLists;
+char[60][30] cardDueDates;
 int cardQuantity;
 
 
@@ -47,7 +47,7 @@ static void update_time() {
 //MENU LAYER CALLBACKS
 uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *callback_context)
 {
-    return 7;
+    return (quantity < 60) ? quantity : 60;
 }
 
 //MAIN WINDOW LOAD/UNLOAD ------------------------------
@@ -87,28 +87,28 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Which key was received?
     switch(t->key) {
       case CARD_IDS:
-        
+        cardIds = t->value;
         break;
       case CARD_NAMES:
-        
+        cardNames = t->value;
         break;
-      case CARD_IDS_BOARDS:
-        
+      case CARD_ID_BOARDS:
+        cardIdBoards = t->value;
         break;
-      case CARD_NAMES_BOARDS:
-        
+      case CARD_NAME_BOARDS:
+        cardNameBoards = t->value;
         break;
-      case CARD_IDS_LISTS:
-        
+      case CARD_ID_LISTS:
+        cardIdLists = t->value;
         break;
-      case CARD_NAMES_LISTS:
-        
+      case CARD_NAME_LISTS:
+        cardNameLists = t->value;
         break;
       case CARD_DUE_DATES:
-        
+        cardDueDates = t->value;
         break;
       case CARD_QUANTITY:
-        
+        cardQuantity = t->value;
         break;
       default:
         APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);

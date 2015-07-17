@@ -88,7 +88,7 @@ function getCards() {
       };
       
       //populate card board, list names
-      for(i=0; i<quantity; i++) {
+      for(i=0; i<60 && i<quantity; i++) {
         
         //populate card board names
         var posInCache = posInArray(idBoardsCache[i], idBoards[i]);
