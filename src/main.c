@@ -10,14 +10,14 @@
 static Window *s_main_window;
 static MenuLayer *s_menulayer_main;
 
-char[60][30] cardIds;
-char[60][100] cardNames;
-char[60][40] cardIdBoards;
-char[60][30] cardNameBoards;
-char[60][30] cardIdLists;
-char[60][30] cardNameLists;
-char[60][30] cardDueDates;
-int quantity;
+static char cardIds[60][30];
+static char cardNames[60][100];
+static char cardIdBoards[60][40];
+static char cardNameBoards[60][30];
+static char cardIdLists[60][30];
+static char cardNameLists[60][30];
+static char cardDueDates[60][30];
+static int quantity;
 
 
 //REFRESH FUNCTIONS -----------------------------------
@@ -51,8 +51,8 @@ uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *
 }
 void draw_row_callback(GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context)
 {
-  menu_cell_basic_draw(ctx, cell_layer, cardNames[cell_index], 
-                       cardNameBoards[cell_index] + '/' + cardNameLists[cell_index] + '/' + cardDueDates[cell_index],
+  menu_cell_basic_draw(ctx, cell_layer, cardNames[(int)cell_index], 
+                       cardNameBoards[(int)cell_index] + '/' + cardNameLists[(int)cell_index] + '/' + cardDueDates[(int)cell_index],
                        NULL);
 }
 void select_click_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context)
