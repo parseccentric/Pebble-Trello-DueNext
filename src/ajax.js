@@ -119,8 +119,7 @@ function getCards() {
         }
         
       }
-        
-      
+       
       // Assemble dictionary using our keys
       var dictionary = {
         'CARD_IDS': ids,

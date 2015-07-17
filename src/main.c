@@ -1,11 +1,26 @@
 #include <pebble.h>
-#define JSONDATA 0
+#define CARD_IDS 0
+#define CARD_NAMES 1
+#define CARD_ID_BOARDS 2
+#define CARD_NAME_BOARDS 3
+#define CARD_ID_LISTS 4
+#define CARD_NAME_LISTS 5
+#define CARD_DUE_DATES 6
+#define CARD_QUANTITY 7
 static Window *s_main_window;
 static MenuLayer *s_menulayer_main;
 
+char[][30] cardIds;
+char[][100] cardNames;
+char[][40] cardIdBoards;
+char[][30] cardNameBoards;
+char[][30] cardIdLists;
+char[][30] cardNameLists;
+char[][30] cardDueDates;
+int cardQuantity;
+
 
 //REFRESH FUNCTIONS -----------------------------------
-
 
 static void reload_cards() {
   //check for Due Date vs. Board
@@ -65,17 +80,39 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Read first item
   Tuple *t = dict_read_first(iterator);
-
+  var i = 0;
+  
   // For all items
   while(t != NULL) {
     // Which key was received?
     switch(t->key) {
-    case JSONDATA:
-      populateMenu(t->value);
-      break;
-    default:
-      APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
-      break;
+      case CARD_IDS:
+        
+        break;
+      case CARD_NAMES:
+        
+        break;
+      case CARD_IDS_BOARDS:
+        
+        break;
+      case CARD_NAMES_BOARDS:
+        
+        break;
+      case CARD_IDS_LISTS:
+        
+        break;
+      case CARD_NAMES_LISTS:
+        
+        break;
+      case CARD_DUE_DATES:
+        
+        break;
+      case CARD_QUANTITY:
+        
+        break;
+      default:
+        APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
+        break;
     }
 
     // Look for next item
