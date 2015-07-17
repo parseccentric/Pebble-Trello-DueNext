@@ -1,56 +1,39 @@
 #include <pebble.h>
-#define CARD_IDS 0
-#define CARD_NAMES 1
-#define CARD_ID_BOARDS 2
-#define CARD_NAME_BOARDS 3
-#define CARD_ID_LISTS 4
-#define CARD_NAME_LISTS 5
-#define CARD_DUE_DATES 6
-#define CARD_QUANTITY 7
+#define CARD_QUANTITY 0
+#define CARD_IDS 1
+#define CARD_NAMES 2
+#define CARD_ID_BOARDS 3
+#define CARD_NAME_BOARDS 4
+#define CARD_ID_LISTS 5
+#define CARD_NAME_LISTS 6
+#define CARD_DUE_DATES 7
 static Window *s_main_window;
 static MenuLayer *s_menulayer_main;
 
-static char cardIds[60][30];
-static char cardNames[60][100];
-static char cardIdBoards[60][40];
-static char cardNameBoards[60][30];
-static char cardIdLists[60][30];
-static char cardNameLists[60][30];
-static char cardDueDates[60][30];
 static int quantity;
+static char * cardIds[60]; //30
+static char * cardNames[60]; //100
+static char * cardIdBoards[60]; //40
+static char * cardNameBoards[60]; //30
+static char * cardIdLists[60]; //30
+static char * cardNameLists[60]; //30
+static char * cardDueDates[60]; //30
 
 
 //REFRESH FUNCTIONS -----------------------------------
 
-static void reload_cards() {
-  //check for Due Date vs. Board
-  //check for changes
-  //grab JSON object from Trello API
-  //add cards to Past Due
-  //add cards to Due Soon
-  //add cards to Due Later
-  //add cards to Due Eventually
-  //add cards to No Due Date
-  //for every menu item, add 'select' functionality  
-}
+static void reload_cards() {   }
 
-static void update_time() {
-  //get a tm structure
-  
-  //create a long-lived buffer
-  
-  //write the current hours and minutes into the buffer
-  
-  //display this time on the TextLayer
-}
+static void update_time() {}
 
 //MENU LAYER CALLBACKS
 uint16_t num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *callback_context) {
     return (quantity < 60) ? quantity : 60;
 }
 void draw_row_callback(GContext *ctx, Layer *cell_layer, MenuIndex *cell_index, void *callback_context) { 
-  char subtitleStr[92] = 
-    strcat(strcat(strcat(cardNameBoards[(int)cell_index], '/'), cardNameLists[(int)cell_index]), cardDueDates[(int)cell_index]);
+  char * slashStr = "/";
+  char * subtitleStr = 
+    strcat(strcat(strcat(strcat(cardNameBoards[(int)cell_index], slashStr), cardNameLists[(int)cell_index]), slashStr), cardDueDates[(int)cell_index]);
   menu_cell_basic_draw(ctx, cell_layer, cardNames[(int)cell_index], subtitleStr, NULL);
 }
 void select_click_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
@@ -86,35 +69,48 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Read first item
   Tuple *t = dict_read_first(iterator);
-  var i = 0;
   
   // For all items
   while(t != NULL) {
     // Which key was received?
     switch(t->key) {
+      case CARD_QUANTITY:
+        quantity = (int)t->value;
+        break;
       case CARD_IDS:
-        cardIds = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardIds[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_NAMES:
-        cardNames = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardNames[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_ID_BOARDS:
-        cardIdBoards = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardIdBoards[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_NAME_BOARDS:
-        cardNameBoards = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardNameBoards[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_ID_LISTS:
-        cardIdLists = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardIdLists[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_NAME_LISTS:
-        cardNameLists = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardNameLists[i], ((char **)t->value)[i]);
+        }
         break;
       case CARD_DUE_DATES:
-        cardDueDates = t->value;
-        break;
-      case CARD_QUANTITY:
-        quantity = t->value;
+        for(int i=0; i<60; i++) {
+          strcpy(cardDueDates[i], ((char **)t->value)[i]);
+        }
         break;
       default:
         APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
