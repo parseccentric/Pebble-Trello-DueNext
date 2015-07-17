@@ -77,25 +77,47 @@ function getCards() {
       }
       
       var getBoardNameCallback = function(responseText) {
+        var data = JSON.parse(responseText);
         nameBoards[i] = data._value;
+        nameBoardsCache[i] += data._value;
       };
       var getListNameCallback = function(responseText) {
-        nameBoards[i] = data._value;
+        var data = JSON.parse(responseText);
+        nameLists[i] = data._value;
+        nameListsCache[i] += data._value;
       };
       
       //populate card board, list names
-      for(var i=0; i<quantity; i++) {
+      for(i=0; i<quantity; i++) {
+        
+        //populate card board names
         var posInCache = posInArray(idBoardsCache[i], idBoards[i]);
         if(posInCache > -1) {
           nameBoards[i] = nameBoardsCache[posInCache];
         } else {
           // Construct URL
-          var url = 'https://trello.com/1/boards/' + idBoards[i] + '/name/'
+          var url = 'https://trello.com/1/boards/' + idBoards[i] + '/name/' +
               '?key=' + 'f9bee48c183a4acbeaa96f8b16ca9fe8' + 
               '&token=' + '7cf5e086aac9a4d225645c84c6b497c910dbc748ce3d6a9ace45934af6a9471b';
         
           // Send request to Trello
-          xhrRequest(url, 'GET', getBoardNameCallback);
+          xhrRequest(url, 'GET', getBoardNameCallback(responseText));
+        }
+        
+        //populate card list names
+        posInCache = posInArray(idListsCache[i], idLists[i]);
+        if(posInCache > -1) {
+          nameBoards[i] = nameBoardsCache[posInCache];
+        } else {
+          // Construct URL
+          var url = 'https://trello.com/1/lists/' + idLists[i] + '/name/' + 
+              '?key=' + 'f9bee48c183a4acbeaa96f8b16ca9fe8' + 
+              '&token=' + '7cf5e086aac9a4d225645c84c6b497c910dbc748ce3d6a9ace45934af6a9471b';
+        
+          // Send request to Trello
+          xhrRequest(url, 'GET', getListNameCallback(responseText));
+        }
+        
       }
         
       
