@@ -8,7 +8,7 @@ var xhrRequest = function (url, type, callback) {
 };
 
 function posInArray(arrayToCheck, object) {
-  for(var i=0; i<arrayToCheck.length(); i++) {
+  for(var i=0; i<arrayToCheck.length; i++) {
     if(arrayToCheck[i] == object) {
       return i;
     }
@@ -54,7 +54,7 @@ function getCards() {
 
       console.log(data[0].name);
       //get number of cards
-      var quantity = data.length();
+      var quantity = data.length;
       
       //declare card attribute arrays
       var ids = new Array(quantity), 
@@ -91,7 +91,7 @@ function getCards() {
       for(i=0; i<60 && i<quantity; i++) {
         
         //populate card board names
-        var posInCache = posInArray(idBoardsCache[i], idBoards[i]);
+        var posInCache = posInArray(idBoardsCache, idBoards[i]);
         if(posInCache > -1) {
           nameBoards[i] = nameBoardsCache[posInCache];
         } else {
@@ -105,7 +105,7 @@ function getCards() {
         }
         
         //populate card list names
-        posInCache = posInArray(idListsCache[i], idLists[i]);
+        posInCache = posInArray(idListsCache, idLists[i]);
         if(posInCache > -1) {
           nameBoards[i] = nameBoardsCache[posInCache];
         } else {
